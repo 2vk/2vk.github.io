@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>Тест на реакцию</title>
+<meta name="description" content="Онлайн тест для измерения скорости вашего отклика на визуальный и звуковой сигнал">
+<meta name="theme-color" content="#151515">
+<link rel="shortcut icon" type="image/gif" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABDlBMVEUAAAApVXs6d7AVFRUVGR0wYo9PEA8TQhW3My1JkNQqZplCgr6FHRocayAcGhM4b6FyGBYuY5EiaSVfExEYVRs9rkNVtVueMCtEmkkxhTZrEhAVFRVZrP7yX1b///+L9pNKnektdrP861n6+vroUkoVISpt4HXgS0QhIx8XIhgkFhVSo/F36X7s7Ox/8Ic7Ozs5j9kdTnRmx2wbO1RNTU3SRT7OoiMsKRrV1dW/v79m1W1lZWVdXV1Jv08zWTXDMSwmQShKIR/e3t4xgMMscKmnp6ecnJwvaZqOjo564oOAgIBPm1TfVU0/dkPESkObOTN3MCyliilfKSdlWSW8kB42Gxo+MBPIyMgyiDePJCCXw8AgAAAAG3RSTlMAMt326nYxLvv37eXc2davrKqqdXP99uTh2dg7U4FoAAABkUlEQVQ4y32P51rCQBBFh2rv3ZndCYYSjYRqQQTF3pAq6vu/iJuEwAcknl/77T07dxZc4uuHq9HIoH+u6A8i0dWVzTkYE1++ySR/ETtHDh3En3S6tjJStuaTQogWYs8VeojvzHy6sz3Mb1T82T5BRONCYajDcbPIbNUcI67yjy7OUH9lrtktyyr/Qh9uX9k6UAPOhOiiL3XmqzlYV/0YQJGtTdgToo0TVCvX6NJk3od5IRoTuZGVd94WzLugVphc8VrKb8+1uKiE5MmE8CjlG7ocW3wFmWkhK/WcJ5z6CGUpL3EspGeEJylfAgUjV67aDX6C8VS5y+q6lF7DSDgTGVS8SQ+9iiPSXIRGq+H8Xpe6nr2sPL6UcUz9/Ra8c66cM9AHiOC/RCBaKAXHpUIUFklLBeUpjRYhTFQKHEAUhg2i5yDhmWgDQqbqCGwwQ2B3JPyFhN0AENKIHlI+7x+ItBAoYiZRvpCaigt5IjMGDjGNlJy/T4y4zztXbm63hMmHsDPfU9aWFjTTi0xtYWltGP8Btcx2fwrcay4AAAAASUVORK5CYII=">
+<script>
+let mouse = 0, timer = 0, timeout = 0, average = 0, count = 0,
+interpretation = ['Превосходно! Можно садиться за штурвал истребителя или болида формулы 1', 'Это пять с плюсом! Чемпионы мира по пинг-понгу и боксу смотрят на Вас как на конкурента', 'Великолепно! Мастера спорта международного класса одобряют', 'Хорошо! Мастер спорта у Вас в кармане', 'Неплохо. КМС зачтен', 'Нормально. Вы активны, можете лучше', 'Средненько. Скорость реакции, как и у большинства людей', 'Неуд', 'Незачет', 'Вы вообще живы там? Лучше отдохните, попробуйте завтра'],
+results = e => interpretation[[150,170,190,200,210,230,270,350,500,Infinity].findIndex(i=>e<=i)],
+ending = e => ['попытку','попытки','попыток'][(e % 100 > 4 && e % 100 < 20) ? 2 : [2,0,1,1,1,2][(e % 10 < 5) ? e % 10 : 5]],
+react = ()=>{
+	if(timer > 0){
+		timer = performance.now() - timer;
+		average += timer;
+		document.body.style.cssText = '';
+		document.body.innerHTML = timer.toFixed(3) + ' мс<p>' + results(timer) + '.<br><br>Среднее время за '+ ++count + ' ' + ending(count) +': '+ (average / count).toFixed() + ' мс</p>';
+		timer = mouse = 0;
+	}else if(mouse == 1){
+		clearTimeout(timeout);
+		document.body.textContent = 'Слишком рано!';
+		timer = mouse = 0;
+	}else{
+		mouse = 1;
+		document.body.textContent = 'Ждите зеленый';
+		timeout = setTimeout(()=>{
+			timer = performance.now();
+			document.body.textContent = '';
+			document.body.style.background = 'linear-gradient(#2FBF2F, #008000)';
+			sound.play();
+		}, Math.floor([500,1500,2500][count%3]+Math.random()*1000))
+	}
+},
+sound = new Audio();
+sound.src = 'data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAADAAAIJwCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0ND///////////////////////////////////////////8AAABQTEFNRTMuMTAwBLkAAAAAAAAAADUgJAMDTQAB4AAACCdMnHTYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//vQZAAAAZYAVP0AAAgoQAk8oAAAICWZbfm8goG6Mat/ByBAERQSAzWf6gQgg+UDA0SDQfiAPwxHg+/PlHfLuwQ+c/Lwf5R3fxI4H1HAx+J3+Udw//hhxqSWSKHCAPnygYKOB95QPqBCUyjgQ/w//6gwUdwx///y7//////+GGQxBFAKQJyad5Y2JAkmFlBGCmPkIMBzGleDB4OgcwsFMiMwSiAIaM1bQwqCAg7tJhg27TH+waGYIcxhQCbFrqxRTeCh0k3gwVKJWp6BCTJIcZHC8n+ia0V68fhuedP2LwBLYdaLBsJuv81lH6kvNcjr9yus0kEqCQbPaGMwfLkQn8jkpimedJIoc2/0la7A/6caTz8Uj8E6dzHLCMUMXm7/4xmMyqBn9sdxdhpLluG/8pj0uq4yufilft+xnVrZXX9y3S4dpastu4YctRLvN16zuOxHZ+jlleln7HdUlrkes6u0vMsdX+a/XalJEo1D0zcyrU1LVoLUa//4qFTv/4K0sdIEKCIAPUNEc/+4bnY3L71Tm9lsIX0qaiKV0UgG4GiGEB4Nkq1SJCjnRQaR5FalqStu6DoMyFO0c8vJolM2uj017/rqSW13TUt6f6q1dq1uy1W1bb+nr7W1VfQ99CqpmU7qUq9qKkjrqoLZjfAyzcqWYAdvaywlFTjhQjrMEpB6sPlrVjiw1H0cWSt5E3KRuM/gPzwbWEeHCOLxikZIFZkysYnlmJ01Y1YyU6SOZm5sbGRl1KpsitaLKSLxeNkUFKS60mNnUZFkvWzoXwt4i2/5ucqhiFb+bfGNi3UKCZ3OmdsjzWFkqGc2nLfP/+k8Wb97vFZGM0EkqokjxvQcoWJiZKu9wyQFpWhOj3V3utLraz+mhCbELQWVs037F6U//LOFen0ZVzTIQK3rbZJgUmCkIHlIwAARzUWLpp3A2SE5Ct4KBEeMpEvL1gLyP0AlJ34kfgeHGE1VNaUJkUlJE2jcWzacS4LoZmpVy8JDS56dU6oKSSI+tKS1I8hkrIwOIWzvlLrs2XHd613yXz+teHHGE+o6tl5nfq5n/Nq6+Xl5lT4umrcwjOV6nP8O2WuhMJGvrrWg76XEm6R7NWENrW+e8v/7oGSqAAQkK9Z';
+document.addEventListener('keydown',react);
+document.addEventListener('mousedown',react);
+</script>
+<style>
+body{
+	background: #151515;
+	color: #fff;
+	font-family: sans-serif;
+	font-size: 2vmax;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	margin: 0;
+	user-select: none;
+}
+p{
+	font-size: 1vmax;
+	color: #ccc;
+	text-align:center;
+}
+</style>
+</head>
+<body>Жмите где угодно</body>
+<html>
